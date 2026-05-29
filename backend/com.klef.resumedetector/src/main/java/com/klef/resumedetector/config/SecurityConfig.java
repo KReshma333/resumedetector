@@ -29,28 +29,30 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(
-                            "/api/auth/**",
-                            "/swagger-ui/**",
-                            "/swagger-ui.html",
-                            "/v3/api-docs/**"
-                    ).permitAll()
-                    .requestMatchers("/api/resume/**").permitAll()  // temporary for testing
-                    .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+   @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(
+                "/api/auth/**",
+                "/api/resume/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**"
+            ).permitAll()
+            .anyRequest().permitAll()
+        );
 
-        return http.build();
-    }
+    // TEMPORARY TEST
+    // comment this line
+    // http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
+    return http.build();
+}
 @Bean
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
