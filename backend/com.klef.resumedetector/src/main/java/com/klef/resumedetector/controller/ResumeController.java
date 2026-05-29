@@ -31,7 +31,9 @@ public class ResumeController {
     public ResponseEntity<ApiResponseDto<Resume>> uploadResume(
             @RequestParam("file") MultipartFile file,
             @RequestParam("userId") Long userId) {
-
+  System.out.println("========== UPLOAD HIT ==========");
+    System.out.println("Filename: " + file.getOriginalFilename());
+    System.out.println("UserId: " + userId);
         // validate file type
         if (!fileStorageService.isValidFileType(file)) {
             return ResponseEntity.badRequest().body(
