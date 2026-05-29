@@ -82,12 +82,15 @@ public class ResumeParserServiceImpl implements ResumeParserService {
         resumeRepository.deleteById(id);
     }
 
-    private String saveFileToDisk(MultipartFile file) {
+  private String saveFileToDisk(MultipartFile file) {
     try {
         File dir = new File("uploads/resumes");
 
+        System.out.println("DIR = " + dir.getAbsolutePath());
+
         if (!dir.exists()) {
-            dir.mkdirs();
+            boolean created = dir.mkdirs();
+            System.out.println("DIR CREATED = " + created);
         }
 
         String uniqueName =
@@ -95,11 +98,14 @@ public class ResumeParserServiceImpl implements ResumeParserService {
 
         File destFile = new File(dir, uniqueName);
 
+        System.out.println("DEST FILE = " + destFile.getAbsolutePath());
+
         file.transferTo(destFile);
 
         return destFile.getAbsolutePath();
 
     } catch (IOException e) {
+        e.printStackTrace();
         throw new RuntimeException("Failed to save file", e);
     }
 }
