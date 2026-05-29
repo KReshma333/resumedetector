@@ -83,20 +83,26 @@ public class ResumeParserServiceImpl implements ResumeParserService {
     }
 
     private String saveFileToDisk(MultipartFile file) {
-        try {
-            String absoluteDir = "C:/Users/ASUS/OneDrive/Desktop/airesumebuilder/uploads/resumes";
-            File dir = new File(absoluteDir);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            String uniqueName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            File destFile = new File(dir, uniqueName);
-            file.transferTo(destFile);
-            return destFile.getAbsolutePath();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save file: " + e.getMessage());
+    try {
+        File dir = new File("uploads/resumes");
+
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
+
+        String uniqueName =
+                UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        File destFile = new File(dir, uniqueName);
+
+        file.transferTo(destFile);
+
+        return destFile.getAbsolutePath();
+
+    } catch (IOException e) {
+        throw new RuntimeException("Failed to save file", e);
     }
+}
 
     private String getFileExtension(String fileName) {
         if (fileName == null || !fileName.contains(".")) return "UNKNOWN";
