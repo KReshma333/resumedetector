@@ -9,7 +9,8 @@ import com.klef.resumedetector.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -82,15 +83,13 @@ public class ResumeParserServiceImpl implements ResumeParserService {
         resumeRepository.deleteById(id);
     }
 
-  private String saveFileToDisk(MultipartFile file) {
+ private String saveFileToDisk(MultipartFile file) {
     try {
-        File dir = new File("uploads/resumes");
 
-        System.out.println("DIR = " + dir.getAbsolutePath());
+        File dir = new File("/app/uploads/resumes");
 
         if (!dir.exists()) {
-            boolean created = dir.mkdirs();
-            System.out.println("DIR CREATED = " + created);
+            dir.mkdirs();
         }
 
         String uniqueName =
@@ -98,14 +97,15 @@ public class ResumeParserServiceImpl implements ResumeParserService {
 
         File destFile = new File(dir, uniqueName);
 
-        System.out.println("DEST FILE = " + destFile.getAbsolutePath());
-
-        file.transferTo(destFile);
+        Files.copy(
+            file.getInputStream(),
+            destFile.toPath(),
+            StandardCopyOption.REPLACE_EXISTING
+        );
 
         return destFile.getAbsolutePath();
 
-    } catch (IOException e) {
-        e.printStackTrace();
+    } catch (Exception e) {
         throw new RuntimeException("Failed to save file", e);
     }
 }
