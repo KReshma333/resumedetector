@@ -20,8 +20,8 @@ public class CorsConfig {
         		  "http://localhost:3000",
         	        "http://localhost:3002",
         	        "http://localhost:5173",
-        	        "http://localhost:5174"   // Vite dev server
-             "https://resumedetector-rouge.vercel.app",
+        	        "http://localhost:5174",
+             "https://resumedetector-rouge.vercel.app"
         ));
 
         // allow these HTTP methods
